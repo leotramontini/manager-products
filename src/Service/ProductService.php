@@ -3,6 +3,7 @@
 namespace Manager\Service;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Manager\Support\StatusSupport;
 use Manager\Repositories\StatusRepository;
 use Manager\Repositories\ProductRepository;
@@ -42,13 +43,58 @@ class ProductService
         try {
             $pendingStatus = $this->getStatusByAlias(StatusSupport::STATUS_PRODUCT_PENDING);
 
-            return $this->productRepository->create(
-                array_merge($productData, [
-                    'status_id' => $pendingStatus->id
-                ])
-            );
+            $nameImage = $this->storeImage(Arr::get($productData, 'image'));
+
+            return $this->productRepository->create([
+                'name'          => Arr::get($productData, 'name'),
+                'status_id'     => $pendingStatus->id,
+                'image_path'    => $nameImage
+            ]);
         } catch (Exception $error) {
             throw new ServiceProcessException($error->getMessage(), $error->getCode());
+        }
+    }
+
+    /**
+     * @param int $productId
+     * @return int
+     * @throws \Manager\Exceptions\ServiceProcessException
+     */
+    public function deleteProduct($productId)
+    {
+        try {
+            return $this->productRepository->delete($productId);
+        } catch (Exception $error) {
+            throw new ServiceProcessException($error);
+        }
+    }
+
+    /**
+     * @param array $productData
+     * @param int $productId
+     * @return \Illuminate\Support\Collection
+     * @throws \Manager\Exceptions\ServiceProcessException
+     */
+    public function updateProduct($productData, $productId)
+    {
+        try {
+            return $this->productRepository->update($productData, $productId);
+        } catch (Exception $error) {
+            throw new ServiceProcessException($error->getMessage(), $error->getCode());
+        }
+    }
+
+    /**
+     * @param array $filter
+     * @return \Illuminate\Support\Collection
+     * @throws \Manager\Exceptions\ServiceProcessException
+     */
+    public function listProduct($filter)
+    {
+        try {
+            return $this->productRepository->findWhere($filter);
+        } catch (Exception $error) {
+            throw new ServiceProcessException($error->getMessage());
         }
     }
 
@@ -61,5 +107,19 @@ class ProductService
         return $this->statusRepository->findWhere([
             'alias' => $statusAlias
         ])->first();
+    }
+
+    /**
+     * @param \Illuminate\Http\UploadedFile $image
+     * @return string
+     */
+    public function storeImage($image)
+    {
+        $extension  = $image->extension();
+        $path       = 'public/images';
+        $nameImage  = md5(microtime()) . '.' . $extension;
+
+        $image->storeAs($path, $nameImage, 'local');
+        return $nameImage;
     }
 }

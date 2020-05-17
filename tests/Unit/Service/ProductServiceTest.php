@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Service;
 
+use Illuminate\Http\UploadedFile;
 use Manager\Exceptions\ServiceProcessException;
 use Mockery;
 use Exception;
@@ -39,25 +40,31 @@ class ProductServiceTest extends TestCase
             ->with(['alias' => StatusSupport::STATUS_PRODUCT_PENDING])
             ->andReturn($status);
 
+        $extension      = $this->faker->name;
+        $productName    = $this->faker->name;
 
-        $product = [
-            'name' => 'Produto A',
-            'image_path' => '/a'
-        ];
+        $uploadedImage  = Mockery::mock(UploadedFile::class);
+        $uploadedImage
+            ->shouldReceive('extension')
+            ->once()
+            ->andReturn($extension);
 
-        $productFinal = factory(Product::class)->create(array_merge($product, [
-            'status_id' => $status->id
-        ]));
+        $uploadedImage
+            ->shouldReceive('storeAs')
+            ->once()
+            ->andReturn(true);
 
         $this->productRepository
             ->shouldReceive('create')
             ->once()
-            ->with(array_merge($product, [
-                'status_id' => $status->id
-            ]))
-            ->andReturn($productFinal);
+            ->andThrow(new Product());
 
-        $this->assertEquals($productFinal, $this->productService->createProduct($product));
+        $product = [
+            'name'  => $productName,
+            'image' => $uploadedImage
+        ];
+
+        $this->assertInstanceOf(Product::class , $this->productService->createProduct($product));
     }
 
     public function testCreateProductsShouldBeFail()
@@ -72,21 +79,133 @@ class ProductServiceTest extends TestCase
             ->with(['alias' => StatusSupport::STATUS_PRODUCT_PENDING])
             ->andReturn($status);
 
+        $extension      = $this->faker->name;
+        $productName    = $this->faker->name;
 
-        $product = [
-            'name' => 'Produto A',
-            'image_path' => '/a'
-        ];
+        $uploadedImage  = Mockery::mock(UploadedFile::class);
+        $uploadedImage
+            ->shouldReceive('extension')
+            ->once()
+            ->andReturn($extension);
+
+        $uploadedImage
+            ->shouldReceive('storeAs')
+            ->once()
+            ->andReturn(true);
 
         $this->productRepository
             ->shouldReceive('create')
             ->once()
-            ->with(array_merge($product, [
-                'status_id' => $status->id
-            ]))
             ->andThrow(Exception::class);
+
+        $product = [
+            'name'  => $productName,
+            'image' => $uploadedImage
+        ];
 
         $this->expectException(ServiceProcessException::class);
         $this->productService->createProduct($product);
+    }
+
+    public function testDeleteProduct()
+    {
+        $status = factory(Status::class)->create();
+
+        $product = factory(Product::class)->create([
+            'status_id' => $status->id
+        ]);
+
+        $this->productRepository
+            ->shouldReceive('delete')
+            ->once()
+            ->with($product->id)
+            ->andReturn(1);
+
+        $this->assertEquals(1, $this->productService->deleteProduct($product->id));
+    }
+
+    public function testDeleteProductShouldBeFail()
+    {
+        $status = factory(Status::class)->create();
+
+        $product = factory(Product::class)->create([
+            'status_id' => $status->id
+        ]);
+
+        $this->productRepository
+            ->shouldReceive('delete')
+            ->once()
+            ->with($product->id)
+            ->andThrow(Exception::class);
+
+        $this->expectException(ServiceProcessException::class);
+        $this->productService->deleteProduct($product->id);
+    }
+
+    public function testUpdateProduct()
+    {
+        $status = factory(Status::class)->create();
+
+        $product = factory(Product::class)->create([
+            'status_id' => $status->id
+        ]);
+
+        $newName = $this->faker->name;
+
+        $this->productRepository
+            ->shouldReceive('update')
+            ->once()
+            ->with(['name' => $newName], $product->id)
+            ->andReturn(new Product());
+
+        $this->assertInstanceOf(Product::class, $this->productService->updateProduct(['name' => $newName], $product->id));
+    }
+
+    public function testUpdateProductShouldBeFail()
+    {
+        $status = factory(Status::class)->create();
+
+        $product = factory(Product::class)->create([
+            'status_id' => $status->id
+        ]);
+
+        $newName = $this->faker->name;
+
+        $this->productRepository
+            ->shouldReceive('update')
+            ->once()
+            ->with(['name' => $newName], $product->id)
+            ->andThrow(Exception::class);
+
+        $this->expectException(ServiceProcessException::class);
+        $this->productService->updateProduct(['name' => $newName], $product->id);
+    }
+    public function testListProduct()
+    {
+        $status = factory(Status::class)->create();
+
+        $product = factory(Product::class)->create([
+            'status_id' => $status->id
+        ]);
+
+        $this->productRepository
+            ->shouldReceive('findWhere')
+            ->once()
+            ->with(['id' => $product->id])
+            ->andReturn($product);
+
+        $this->assertInstanceOf(Product::class, $this->productService->listProduct(['id' => $product->id]));
+    }
+
+    public function testListProductShouldBeFail()
+    {
+        $this->productRepository
+            ->shouldReceive('findWhere')
+            ->once()
+            ->with([])
+            ->andThrow(Exception::class);
+
+        $this->expectException(ServiceProcessException::class);
+        $this->productService->listProduct([]);
     }
 }

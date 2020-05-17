@@ -31,7 +31,8 @@ $factory->define(User::class, function (Faker $faker) {
 
 $factory->define(Status::class, function (Faker $faker) {
     return [
-        'name' => $faker->name
+        'name'  => $faker->name,
+        'alias' => $faker->name
     ];
 });
 
