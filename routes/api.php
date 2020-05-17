@@ -16,3 +16,14 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+$api = app('Dingo\Api\Routing\Router');
+
+$api->version('v1', function ($api) {
+    $api->get('product', 'Manager\Controllers\ProductController@index');
+    $api->post('product', 'Manager\Controllers\ProductController@store');
+    $api->delete('product/{productId}', 'Manager\Controllers\ProductController@delete')
+        ->where('productId', '[0-9]+');
+    $api->put('product/{productId}', 'Manager\Controllers\ProductController@update')
+        ->where('productId', '[0-9]+');
+});
