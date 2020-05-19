@@ -78,6 +78,16 @@ class ProductService
     public function updateProduct($productData, $productId)
     {
         try {
+
+            if (isset($productData['image'])) {
+                $imageName = $this->storeImage(Arr::get($productData, 'image'));
+
+                $productData = array_merge($productData, [
+                    'image_path' => $imageName
+                ]);
+
+            }
+
             return $this->productRepository->update($productData, $productId);
         } catch (Exception $error) {
             throw new ServiceProcessException($error->getMessage(), $error->getCode());
