@@ -130,7 +130,7 @@ class ProductControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' .  $this->token
-        ])->json('PUT', $this->baseResource . "/$product->id", ['name' => $newName]);
+        ])->json('POST', $this->baseResource . "/$product->id", ['name' => $newName]);
         $response->assertJson($expected)
             ->assertStatus(200);
     }
@@ -148,7 +148,7 @@ class ProductControllerTest extends TestCase
         $productId = $product->id + $this->faker->randomDigitNotNull;
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' .  $this->token
-        ])->json('PUT', $this->baseResource . "/$productId", ['name' => $newName]);
+        ])->json('POST', $this->baseResource . "/$productId", ['name' => $newName]);
         $response
             ->assertStatus(422);
     }
