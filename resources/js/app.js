@@ -8,12 +8,13 @@ Vue.use(VueRouter);
 
 import Vuex from 'vuex';
 Vue.use(Vuex);
-import store from './vuex/store';
 
 import auth from './auth'
-
+import store from './vuex/store';
 import App from './components/App.vue';
 import Login from './components/LoginForm';
+import Dashboard from "./components/Dashboard";
+import ListProducts from "./components/products/ListProducts";
 
 function requireAuth (to, from, next) {
     if (!auth.loggedIn()) {
@@ -30,6 +31,17 @@ const router = new VueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
+        {
+            path: '/dashboard',
+            component: Dashboard,
+            beforeEnter: requireAuth,
+            children: [
+                {
+                    path: '/list-products',
+                    component: ListProducts
+                },
+            ]
+        },
         { path: '/login', component: Login },
         { path: '/logout',
             beforeEnter (to, from, next) {
