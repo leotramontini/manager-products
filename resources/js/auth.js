@@ -45,7 +45,6 @@ function pretendRequest (email, pass, cb) {
         'password': pass
     }).then(
         (response) => {
-            console.log(response.body);
             cb({
                 authenticated: true,
                 token: response.body.access_token
