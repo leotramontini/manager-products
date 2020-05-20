@@ -2090,6 +2090,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ListProducts",
@@ -37862,22 +37865,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table" }, [
-    _vm._m(0),
+  return _c("div", [
+    _c("br"),
     _vm._v(" "),
-    _c(
-      "tbody",
-      _vm._l(this.products, function(product) {
-        return _c("tr", [
-          _c("td", [_c("img", { attrs: { src: product["image_path"] } })]),
-          _vm._v(" "),
-          _c("th", [_vm._v(_vm._s(product["name"]))]),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(product["status"]["name"]))])
-        ])
-      }),
-      0
-    )
+    _c("table", { staticClass: "table table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(this.products, function(product) {
+          return _c("tr", [
+            _c("td", [
+              _c("img", {
+                staticClass: "img-thumbnail",
+                staticStyle: { "max-width": "100px" },
+                attrs: { src: product["image_path"] }
+              })
+            ]),
+            _vm._v(" "),
+            _c("th", [_vm._v(_vm._s(product["name"]))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(product["status"]["name"]))])
+          ])
+        }),
+        0
+      )
+    ])
   ])
 }
 var staticRenderFns = [
@@ -37887,7 +37900,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Imagem do Produto")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome do produto")]),
         _vm._v(" "),
