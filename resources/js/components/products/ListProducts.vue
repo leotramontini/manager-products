@@ -1,20 +1,23 @@
 <template>
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col">Nome do produto</th>
-            <th scope="col">Status do produto</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="product in this.products">
-            <td><img v-bind:src="product['image_path']"></td>
-            <th>{{product['name']}}</th>
-            <td>{{product['status']['name']}}</td>
-        </tr>
-        </tbody>
-    </table>
+    <div>
+        <br>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Imagem do Produto</th>
+                <th scope="col">Nome do produto</th>
+                <th scope="col">Status do produto</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="product in this.products">
+                <td><img style="max-width: 100px" class="img-thumbnail" v-bind:src="product['image_path']"></td>
+                <th>{{product['name']}}</th>
+                <td>{{product['status']['name']}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
