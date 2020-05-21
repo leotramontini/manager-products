@@ -19,7 +19,7 @@
                 <th>{{product['name']}}</th>
                 <td><span v-bind:class="getBadgeClass(product['status']['alias'])">{{product['status']['name']}}</span></td>
                 <td>
-                    <button class="btn btn-warning" v-on:click="updateProduct(index)">Atualizar cadastro</button>
+                    <button class="btn btn-info" v-on:click="updateProduct(index)">Atualizar cadastro</button>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteProduct" v-on:click="selectedProduct(index)">Excluir</button>
                 </td>
             </tr>

@@ -38271,7 +38271,7 @@ var render = function() {
               _c(
                 "button",
                 {
-                  staticClass: "btn btn-warning",
+                  staticClass: "btn btn-info",
                   on: {
                     click: function($event) {
                       return _vm.updateProduct(index)
