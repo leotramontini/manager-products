@@ -151,14 +151,25 @@ class ProductServiceTest extends TestCase
         ]);
 
         $newName = $this->faker->name;
+        $extension = $this->faker->name;
+
+        $uploadedImage  = Mockery::mock(UploadedFile::class);
+        $uploadedImage
+            ->shouldReceive('extension')
+            ->once()
+            ->andReturn($extension);
+
+        $uploadedImage
+            ->shouldReceive('storeAs')
+            ->once()
+            ->andReturn(true);
 
         $this->productRepository
             ->shouldReceive('update')
             ->once()
-            ->with(['name' => $newName], $product->id)
             ->andReturn(new Product());
 
-        $this->assertInstanceOf(Product::class, $this->productService->updateProduct(['name' => $newName], $product->id));
+        $this->assertInstanceOf(Product::class, $this->productService->updateProduct(['name' => $newName, 'image' => $uploadedImage], $product->id));
     }
 
     public function testUpdateProductShouldBeFail()
