@@ -8,8 +8,15 @@ use Manager\Exceptions\ServiceProcessException;
 
 class StatusController extends BaseController
 {
+    /**
+     * @var \Manager\Service\StatusService
+     */
     protected $statusService;
 
+    /**
+     * StatusController constructor.
+     * @param \Manager\Service\StatusService $statusService
+     */
     public function __construct(StatusService $statusService)
     {
         $this->statusService = $statusService;
@@ -25,7 +32,7 @@ class StatusController extends BaseController
         } catch (ServiceProcessException $error) {
             $this->throwErrorBadRequest($error->getMessage());
         }
-        
+
         return $this->collection($statuses, new StatusTransformer());
     }
 }
