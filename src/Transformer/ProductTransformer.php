@@ -17,6 +17,7 @@ class ProductTransformer extends TransformerAbstract
             'status'    => [
                 'id'    => $status->id,
                 'name'  => $status->name,
+                'alias' => $status->alias
             ],
             'image_path' => asset("storage/images/$product->image_path")
         ];

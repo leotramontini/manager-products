@@ -32,7 +32,8 @@ class ProductTransformerTest extends TestCase
             'name'      => $product->name,
             'status'    => [
                 'id'    => $status->id,
-                'name'  => $status->name
+                'name'  => $status->name,
+                'alias' => $status->alias
             ],
             'image_path' => asset("storage/images/$product->image_path")
         ];
