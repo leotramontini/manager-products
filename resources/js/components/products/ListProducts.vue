@@ -1,6 +1,9 @@
 <template>
     <div>
         <br>
+        <p>
+            <router-link class="btn btn-success" to="/create-product">Cadastrar produto</router-link>
+        </p>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -16,6 +19,7 @@
                 <th>{{product['name']}}</th>
                 <td>{{product['status']['name']}}</td>
                 <td>
+                    <button class="btn btn-warning" v-on:click="updateProduct(index)">Atualizar cadastro</button>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteProduct" v-on:click="selectedProduct(index)">Excluir</button>
                 </td>
             </tr>
@@ -36,7 +40,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                        <button type="button" class="btn btn-danger" v-on:click="deleteProduct()">Salvar mudanças</button>
+                        <button type="button" class="btn btn-danger" v-on:click="deleteProduct()">Excluir o produto</button>
                     </div>
                 </div>
             </div>
@@ -58,7 +62,8 @@
 
         methods: {
             ...mapActions([
-                'changeProducts'
+                'changeProducts',
+                'changeSelectedProduct'
             ]),
 
             getProducts() {
@@ -87,13 +92,20 @@
                 }).then(
                     (response) => {
                         this.products.splice(this.indexProductSelected, 1);
-                        $("#modalDeleteProduct").modal('hide')
+                        $("#modalDeleteProduct").modal('hide');
+                        $('.modal-backdrop').remove();
                     },
                 );
             },
 
             selectedProduct(indexProduct) {
                 this.indexProductSelected = indexProduct;
+            },
+
+            updateProduct(index) {
+                const product = this.products[index];
+                this.changeSelectedProduct(product);
+                this.$router.push("/update-product");
             }
 
         },

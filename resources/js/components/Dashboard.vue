@@ -1,10 +1,6 @@
 <template>
     <div class="container">
-        <ul class="nav">
-            <li class="nav-item">
-                <router-link class="nav-link active" to="/list-products">Listagem de produtos</router-link>
-            </li>
-        </ul>
+        <router-link to="/list-products">Listagem de produtos</router-link>
         <router-view></router-view>
     </div>
 </template>
