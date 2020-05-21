@@ -23,6 +23,8 @@ $api->version('v1', function ($api) {
     $api->post('login', 'Manager\Controllers\AuthController@login');
 
     $api->group(['middleware' => 'auth.jwt'], function ($api) {
+        $api->get('status/all', 'Manager\Controllers\StatusController@getAll');
+
         $api->get('product', 'Manager\Controllers\ProductController@index');
         $api->post('product', 'Manager\Controllers\ProductController@store');
         $api->delete('product/{productId}', 'Manager\Controllers\ProductController@delete')

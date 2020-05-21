@@ -15,6 +15,14 @@
         </div>
 
         <div class="form-group row">
+            <label for="productStatus" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-10">
+                <select id="productStatus" class="custom-select">
+                    <option v-for="productStatus in productStatuses" v-bind:selected="isSelected(productStatus['alias'])" v-bind:value="productStatus['id']">{{productStatus['name']}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
             <label for="inputFile" class="col-sm-2 col-form-label">Imagem do produto</label>
             <div class="col-sm-10">
                 <input type="file" id="inputFile" @change="getImageFile" required class="form-control-file">
@@ -38,6 +46,7 @@
             return {
                 productName: '',
                 productImage: null,
+                productStatuses: {},
                 disableButton: false
             }
         },
@@ -57,6 +66,8 @@
                 if (this.productName == '' && this.productImage == null) {
                     return;
                 }
+
+                formData.append('status_id', $('#productStatus').val());
 
                 if (this.productName !== '') {
                     formData.append('name', this.productName);
@@ -80,6 +91,23 @@
                 )
             },
 
+            isSelected(productAlias) {
+                console.log(this.selectedProduct['status']);
+                return this.selectedProduct['status']['alias'] === productAlias;
+            },
+
+            getStatuses() {
+                Vue.http.get('/api/status/all', {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.userToken
+                    }
+                }).then(
+                    (response) => {
+                        this.productStatuses = response.data.data;
+                    }
+                )
+            },
+
             getImageFile(event) {
                 this.productImage = event.target.files[0];
             }
@@ -96,6 +124,7 @@
 
         mounted() {
             this.setProductName();
+            this.getStatuses();
         }
 
     }

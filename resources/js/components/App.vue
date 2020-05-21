@@ -1,8 +1,9 @@
 <template>
     <div id="app">
-        <div class="d-flex justify-content-end"></div>
+        <router-link v-if="!loggedIn" to="/login">Log in</router-link>
+        <div class="d-flex justify-content-end">
             <router-link v-if="loggedIn" to="/logout">Log out</router-link>
-            <router-link v-if="!loggedIn" to="/login">Log in</router-link>
+        </div>
         <template v-if="$route.matched.length">
             <router-view></router-view>
         </template>

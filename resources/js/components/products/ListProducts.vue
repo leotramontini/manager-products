@@ -17,7 +17,7 @@
             <tr v-for="(product, index) in this.products">
                 <td><img style="max-width: 100px" class="img-thumbnail" v-bind:src="product['image_path']"></td>
                 <th>{{product['name']}}</th>
-                <td>{{product['status']['name']}}</td>
+                <td><span v-bind:class="getBadgeClass(product['status']['alias'])">{{product['status']['name']}}</span></td>
                 <td>
                     <button class="btn btn-warning" v-on:click="updateProduct(index)">Atualizar cadastro</button>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteProduct" v-on:click="selectedProduct(index)">Excluir</button>
@@ -96,6 +96,26 @@
                         $('.modal-backdrop').remove();
                     },
                 );
+            },
+
+            getBadgeClass(productStatusAlias) {
+
+                switch (productStatusAlias) {
+                    case 'product.pending':
+                        return 'badge badge-warning';
+
+                    case 'product.under_analysis':
+                        return 'badge badge-primary';
+
+                    case 'product.approved':
+                        return 'badge badge-success';
+
+                    case 'product.refused':
+                        return 'badge badge-danger';
+
+                    default:
+                        return 'badge badge-secondary'
+                }
             },
 
             selectedProduct(indexProduct) {

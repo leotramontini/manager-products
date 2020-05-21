@@ -1920,6 +1920,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2234,6 +2235,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         $('.modal-backdrop').remove();
       });
     },
+    getBadgeClass: function getBadgeClass(productStatusAlias) {
+      switch (productStatusAlias) {
+        case 'product.pending':
+          return 'badge badge-warning';
+
+        case 'product.under_analysis':
+          return 'badge badge-primary';
+
+        case 'product.approved':
+          return 'badge badge-success';
+
+        case 'product.refused':
+          return 'badge badge-danger';
+
+        default:
+          return 'badge badge-secondary';
+      }
+    },
     selectedProduct: function selectedProduct(indexProduct) {
       this.indexProductSelected = indexProduct;
     },
@@ -2297,6 +2316,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "UpdateProduct",
@@ -2304,6 +2331,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       productName: '',
       productImage: null,
+      productStatuses: {},
       disableButton: false
     };
   },
@@ -2319,6 +2347,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.productName == '' && this.productImage == null) {
         return;
       }
+
+      formData.append('status_id', $('#productStatus').val());
 
       if (this.productName !== '') {
         formData.append('name', this.productName);
@@ -2339,6 +2369,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this.$router.go(-1);
       });
     },
+    isSelected: function isSelected(productAlias) {
+      console.log(this.selectedProduct['status']);
+      return this.selectedProduct['status']['alias'] === productAlias;
+    },
+    getStatuses: function getStatuses() {
+      var _this2 = this;
+
+      Vue.http.get('/api/status/all', {
+        headers: {
+          'Authorization': 'Bearer ' + this.userToken
+        }
+      }).then(function (response) {
+        _this2.productStatuses = response.data.data;
+      });
+    },
     getImageFile: function getImageFile(event) {
       this.productImage = event.target.files[0];
     }
@@ -2346,6 +2391,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['products', 'userToken', 'selectedProduct'])),
   mounted: function mounted() {
     this.setProductName();
+    this.getStatuses();
   }
 });
 
@@ -37898,15 +37944,22 @@ var render = function() {
     "div",
     { attrs: { id: "app" } },
     [
-      _c("div", { staticClass: "d-flex justify-content-end" }),
-      _vm._v(" "),
-      _vm.loggedIn
-        ? _c("router-link", { attrs: { to: "/logout" } }, [_vm._v("Log out")])
-        : _vm._e(),
-      _vm._v(" "),
       !_vm.loggedIn
         ? _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Log in")])
         : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "d-flex justify-content-end" },
+        [
+          _vm.loggedIn
+            ? _c("router-link", { attrs: { to: "/logout" } }, [
+                _vm._v("Log out")
+              ])
+            : _vm._e()
+        ],
+        1
+      ),
       _vm._v(" "),
       _vm.$route.matched.length ? [_c("router-view")] : _vm._e()
     ],
@@ -38206,7 +38259,13 @@ var render = function() {
             _vm._v(" "),
             _c("th", [_vm._v(_vm._s(product["name"]))]),
             _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(product["status"]["name"]))]),
+            _c("td", [
+              _c(
+                "span",
+                { class: _vm.getBadgeClass(product["status"]["alias"]) },
+                [_vm._v(_vm._s(product["status"]["name"]))]
+              )
+            ]),
             _vm._v(" "),
             _c("td", [
               _c(
@@ -38423,6 +38482,37 @@ var render = function() {
             src: _vm.selectedProduct["image_path"]
           }
         })
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group row" }, [
+      _c(
+        "label",
+        {
+          staticClass: "col-sm-2 col-form-label",
+          attrs: { for: "productStatus" }
+        },
+        [_vm._v("Status")]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-10" }, [
+        _c(
+          "select",
+          { staticClass: "custom-select", attrs: { id: "productStatus" } },
+          _vm._l(_vm.productStatuses, function(productStatus) {
+            return _c(
+              "option",
+              {
+                domProps: {
+                  selected: _vm.isSelected(productStatus["alias"]),
+                  value: productStatus["id"]
+                }
+              },
+              [_vm._v(_vm._s(productStatus["name"]))]
+            )
+          }),
+          0
+        )
       ])
     ]),
     _vm._v(" "),
