@@ -1,6 +1,8 @@
 <template>
     <div>
-        <br>
+        <p>
+            <router-link class="btn btn-secondary" to="/create-product">Cadastrar produto</router-link>
+        </p>
         <table class="table table-striped">
             <thead>
             <tr>
