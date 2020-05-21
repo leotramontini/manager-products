@@ -20,10 +20,32 @@
                 <td>{{product['status']['name']}}</td>
                 <td>
                     <button class="btn btn-warning" v-on:click="updateProduct(index)">Atualizar cadastro</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDeleteProduct" v-on:click="selectedProduct(index)">Excluir</button>
                 </td>
             </tr>
             </tbody>
         </table>
+
+        <div class="modal" id="modalDeleteProduct" tabindex="-1" role="dialog" aria-labelledby="Excluir produto" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Excluir produto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Deja realmente excluir o produto?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-danger" v-on:click="deleteProduct()">Excluir o produto</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -32,6 +54,12 @@
 
     export default {
         name: "ListProducts",
+        data() {
+            return {
+                indexProductSelected: ''
+            }
+        },
+
         methods: {
             ...mapActions([
                 'changeProducts',
@@ -48,6 +76,30 @@
                         this.changeProducts(response.data.data);
                     }
                 )
+            },
+
+            deleteProduct() {
+
+                let product = this.products[this.indexProductSelected];
+
+                Vue.http.delete('/api/product/{productId}', {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.userToken
+                    },
+                    params: {
+                        productId: product['id']
+                    }
+                }).then(
+                    (response) => {
+                        this.products.splice(this.indexProductSelected, 1);
+                        $("#modalDeleteProduct").modal('hide');
+                        $('.modal-backdrop').remove();
+                    },
+                );
+            },
+
+            selectedProduct(indexProduct) {
+                this.indexProductSelected = indexProduct;
             },
 
             updateProduct(index) {

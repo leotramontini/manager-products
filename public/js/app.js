@@ -2174,9 +2174,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ListProducts",
+  data: function data() {
+    return {
+      indexProductSelected: ''
+    };
+  },
   methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['changeProducts', 'changeSelectedProduct'])), {}, {
     getProducts: function getProducts() {
       var _this = this;
@@ -2188,6 +2215,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }).then(function (response) {
         _this.changeProducts(response.data.data);
       });
+    },
+    deleteProduct: function deleteProduct() {
+      var _this2 = this;
+
+      var product = this.products[this.indexProductSelected];
+      Vue.http["delete"]('/api/product/{productId}', {
+        headers: {
+          'Authorization': 'Bearer ' + this.userToken
+        },
+        params: {
+          productId: product['id']
+        }
+      }).then(function (response) {
+        _this2.products.splice(_this2.indexProductSelected, 1);
+
+        $("#modalDeleteProduct").modal('hide');
+        $('.modal-backdrop').remove();
+      });
+    },
+    selectedProduct: function selectedProduct(indexProduct) {
+      this.indexProductSelected = indexProduct;
     },
     updateProduct: function updateProduct(index) {
       var product = this.products[index];
@@ -38172,13 +38220,90 @@ var render = function() {
                   }
                 },
                 [_vm._v("Atualizar cadastro")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-danger",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDeleteProduct"
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.selectedProduct(index)
+                    }
+                  }
+                },
+                [_vm._v("Excluir")]
               )
             ])
           ])
         }),
         0
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal",
+        attrs: {
+          id: "modalDeleteProduct",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "Excluir produto",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm._v(
+                  "\n                    Deja realmente excluir o produto?\n                "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Fechar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteProduct()
+                      }
+                    }
+                  },
+                  [_vm._v("Excluir o produto")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -38196,6 +38321,27 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } })
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("Excluir produto")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Fechar"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
