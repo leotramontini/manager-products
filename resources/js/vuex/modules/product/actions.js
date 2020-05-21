@@ -4,6 +4,6 @@ export default {
     },
 
     changeSelectedProduct(context, payload) {
-        context.commit("CHANGE_SELECTED_PRODUCTS", payload);
+        context.commit("CHANGE_SELECTED_PRODUCT", payload);
     }
 }

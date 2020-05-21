@@ -16,6 +16,7 @@ import Login from './components/LoginForm';
 import Dashboard from "./components/Dashboard";
 import ListProducts from "./components/products/ListProducts";
 import CreateProduct from "./components/products/CreateProduct";
+import UpdateProduct from "./components/products/UpdateProduct";
 
 function requireAuth (to, from, next) {
     if (!auth.loggedIn()) {
@@ -44,6 +45,10 @@ const router = new VueRouter({
                 {
                     path: '/create-product',
                     component: CreateProduct
+                },
+                {
+                    path: '/update-product',
+                    component: UpdateProduct
                 },
             ]
         },
