@@ -1,4 +1,4 @@
-### Gerenciado de catálago :page_with_curl:
+### Gerenciador de catálago de produtos :page_with_curl:
 
 <img src="https://img.shields.io/static/v1?label=COVERAGE&message=100&color=green&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=Licese&message=MIT&color=blue&style=for-the-badge"/> <img src="https://img.shields.io/static/v1?label=PHP&message=7.2.31&color=purple&style=for-the-badge&logo=PHP"/> <img src="https://img.shields.io/static/v1?label=LARAVEL&message=6.2&color=red&style=for-the-badge&logo=LARAVEL"/>
 
