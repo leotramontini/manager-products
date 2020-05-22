@@ -1,6 +1,10 @@
 <template>
     <div>
-        <div class="container">
+        <template v-if="$route.matched.length">
+            <router-view></router-view>
+        </template>
+        <div v-else class="container">
+            <br>
             <div v-if="error" class="alert alert-danger" role="alert">
                 Email ou senha inválidos.
             </div>
@@ -13,7 +17,7 @@
                     <label for="exampleInputPassword1">Senha</label>
                     <input type="password" v-model="password" class="form-control" id="exampleInputPassword1">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Enviar</button>
             </form>
         </div>
     </div>
@@ -51,6 +55,12 @@
         },
         mounted: function () {
             this.checkLogin();
-        }
+        },
+
+        created () {
+            auth.onChange = loggedIn => {
+                this.loggedIn = loggedIn
+            }
+        },
     }
 </script>
