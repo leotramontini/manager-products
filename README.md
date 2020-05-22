@@ -159,6 +159,12 @@ Rodar as migrations e seeds criadas:
 php artisan migration --seed
 ```
 
+Executar o comando:
+
+```
+php artisan storage:link
+```
+
 Agora podemos acessar no browser:
 
 `http://manager-product.local/`
