@@ -11,7 +11,6 @@ Vue.use(Vuex);
 
 import auth from './auth'
 import store from './vuex/store';
-import App from './components/App.vue';
 import Login from './components/LoginForm';
 import Dashboard from "./components/Dashboard";
 import ListProducts from "./components/products/ListProducts";
@@ -67,5 +66,5 @@ new Vue({
     el: '#app',
     router,
     store,
-    render: h => h(App)
+    render: h => h(Login)
 })

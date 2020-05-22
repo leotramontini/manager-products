@@ -1,6 +1,10 @@
 <template>
     <div class="container">
-        <router-link to="/list-products">Listagem de produtos</router-link>
+        <br>
+        <div class="d-flex justify-content-between">
+            <router-link class="btn btn-primary" to="/list-products">Listagem de produtos</router-link>
+            <router-link class="btn btn-secondary" to="/logout">Log out</router-link>
+        </div>
         <router-view></router-view>
     </div>
 </template>
